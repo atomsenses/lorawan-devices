@@ -1,16 +1,19 @@
 #!/usr/bin/env node
 
-const Ajv = require('ajv');
+const Ajv = require('ajv/dist/2020');
+const addFormats = require('ajv-formats');
+
 const yargs = require('yargs');
 const fs = require('fs');
 const yaml = require('js-yaml');
-const sizeOf = require('image-size');
+const { imageSizeFromFile } = require('image-size/fromFile');
 const { spawn } = require('child_process');
 const isEqual = require('lodash.isequal');
 const readChunk = require('read-chunk');
 const imageType = require('image-type');
 
 const ajv = new Ajv({ schemas: [require('../lib/payload.json'), require('../schema.json')] });
+addFormats(ajv);
 
 const options = yargs
   .usage('Usage: --vendor <file> [--vendor-id <id>]')
@@ -26,21 +29,12 @@ const options = yargs
     type: 'string',
   }).argv;
 
-let validateVendorsIndex = ajv.compile({
-  $ref: 'https://schema.thethings.network/devicerepository/1/schema#/definitions/vendorsIndex',
-});
-let validateVendorIndex = ajv.compile({
-  $ref: 'https://schema.thethings.network/devicerepository/1/schema#/definitions/vendorIndex',
-});
-let validateEndDevice = ajv.compile({
-  $ref: 'https://schema.thethings.network/devicerepository/1/schema#/definitions/endDevice',
-});
-let validateEndDeviceProfile = ajv.compile({
-  $ref: 'https://schema.thethings.network/devicerepository/1/schema#/definitions/endDeviceProfile',
-});
-let validateEndDevicePayloadCodec = ajv.compile({
-  $ref: 'https://schema.thethings.network/devicerepository/1/schema#/definitions/endDevicePayloadCodec',
-});
+const schemaId = 'https://schema.thethings.network/devicerepository/1/schema';
+const validateVendorsIndex = ajv.getSchema(`${schemaId}#/$defs/vendorsIndex`);
+const validateVendorIndex = ajv.getSchema(`${schemaId}#/$defs/vendorIndex`);
+const validateEndDevice = ajv.getSchema(`${schemaId}#/$defs/endDevice`);
+const validateEndDeviceProfile = ajv.getSchema(`${schemaId}#/$defs/endDeviceProfile`);
+const validateEndDevicePayloadCodec = ajv.getSchema(`${schemaId}#/$defs/endDevicePayloadCodec`);
 
 function requireFile(path) {
   if (path.toLowerCase() !== path) {
@@ -59,19 +53,17 @@ function requireFile(path) {
 
 async function requireDimensions(path) {
   await requireFile(path);
-  return await new Promise((resolve, reject) => {
-    sizeOf(path, (err, dimensions) => {
-      if (err) {
-        reject(new Error(`load image ${path}: ${err}`));
-      } else if (dimensions.width > 2000 || dimensions.height > 2000) {
-        reject(
-          new Error(`image ${path} too large: maximum is 2000x2000 but loaded ${dimensions.width}x${dimensions.height}`)
-        );
-      } else {
-        resolve();
-      }
-    });
-  });
+  let dimensions;
+  try {
+    dimensions = await imageSizeFromFile(path);
+  } catch (err) {
+    throw new Error(`load image ${path}: ${err}`);
+  }
+  if (dimensions.width > 2000 || dimensions.height > 2000) {
+    throw new Error(
+      `image ${path} too large: maximum is 2000x2000 but loaded ${dimensions.width}x${dimensions.height}`
+    );
+  }
 }
 
 async function validatePayloadCodecs(vendorId, payloadEncoding) {
@@ -206,7 +198,7 @@ function requireImageDecode(fileName) {
 }
 
 function formatValidationErrors(errors) {
-  return errors.map((e) => `${e.dataPath} ${e.message}`);
+  return errors.map((e) => `${e.instancePath} ${e.message}`);
 }
 
 const vendors = yaml.load(fs.readFileSync(options.vendor));
@@ -283,17 +275,18 @@ vendors.vendors.forEach((v) => {
     console.log(`${v.id}: valid index`);
 
     const codecs = {};
-
     const deviceNames = {};
 
     vendor.endDevices.forEach(async (d) => {
       const key = `${v.id}: ${d}`;
       const endDevicePath = `${folder}/${d}.yaml`;
       const endDevice = yaml.load(fs.readFileSync(endDevicePath));
+
       if (!validateEndDevice(endDevice)) {
         console.error(`${key}: invalid: ${formatValidationErrors(validateEndDevice.errors)}`);
         process.exit(1);
       }
+
       console.log(`${key}: valid`);
 
       // Create a regex to check if the vendor's name is a standalone word in the device name

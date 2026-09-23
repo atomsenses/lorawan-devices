@@ -1,9 +1,9 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://schema.thethings.network/devicerepository/1/schema",
   "title": "LoRaWAN Device Repository",
   "description": "Open source repository for LoRaWAN end devices and gateways",
-  "definitions": {
+  "$defs": {
     "identifier": {
       "type": "string",
       "pattern": "^[a-z0-9](?:[-]?[a-z0-9]){2,}$",
@@ -15,7 +15,7 @@
     },
     "logo": {
       "allOf": [
-        { "$ref": "#/definitions/localFile" },
+        { "$ref": "#/$defs/localFile" },
         {
           "type": "string",
           "pattern": "\\.(png|svg)$"
@@ -24,7 +24,7 @@
     },
     "photo": {
       "allOf": [
-        { "$ref": "#/definitions/localFile" },
+        { "$ref": "#/$defs/localFile" },
         {
           "type": "string",
           "pattern": "\\.(png|jpg|jpeg)$"
@@ -65,8 +65,9 @@
         "vendors": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/vendor"
-          }
+            "$ref": "#/$defs/vendor"
+          },
+          "uniqueItems": true
         }
       },
       "additionalProperties": false
@@ -77,8 +78,9 @@
         "endDevices": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/identifier"
-          }
+            "$ref": "#/$defs/identifier"
+          },
+          "uniqueItems": true
         },
         "profileIDs": {
           "type": "object",
@@ -89,7 +91,7 @@
                   "type": "object",
                   "properties": {
                     "endDeviceID": {
-                      "$ref": "#/definitions/identifier"
+                      "$ref": "#/$defs/identifier"
                     },
                     "hardwareVersion": {
                       "type": "string"
@@ -99,7 +101,7 @@
                       "minLength": 1
                     },
                     "region": {
-                      "$ref": "#/definitions/region"
+                      "$ref": "#/$defs/region"
                     }
                   },
                   "required": ["endDeviceID", "hardwareVersion", "firmwareVersion", "region"]
@@ -108,18 +110,18 @@
                   "type": "object",
                   "properties": {
                     "id": {
-                      "$ref": "#/definitions/identifier"
+                      "$ref": "#/$defs/identifier"
                     },
                     "codec": {
-                      "$ref": "#/definitions/identifier"
+                      "$ref": "#/$defs/identifier"
                     }
                   },
                   "required": ["id", "codec"]
                 }
               ]
-            },
-            "additionalProperties": false
-          }
+            }
+          },
+          "additionalProperties": false
         }
       },
       "additionalProperties": false
@@ -129,7 +131,7 @@
       "description": "Vendor of a device",
       "type": "object",
       "properties": {
-        "id": { "$ref": "#/definitions/identifier" },
+        "id": { "$ref": "#/$defs/identifier" },
         "name": {
           "type": "string",
           "minLength": 1
@@ -178,7 +180,8 @@
           "items": {
             "type": "string",
             "pattern": "[0-9A-F]{6}"
-          }
+          },
+          "uniqueItems": true
         },
         "vendorID": {
           "type": "integer",
@@ -194,7 +197,7 @@
           "type": "string",
           "format": "email"
         },
-        "logo": { "$ref": "#/definitions/logo" }
+        "logo": { "$ref": "#/$defs/logo" }
       },
       "required": ["id", "name"]
     },
@@ -247,7 +250,7 @@
       "properties": {
         "fileName": {
           "allOf": [
-            { "$ref": "#/definitions/localFile" },
+            { "$ref": "#/$defs/localFile" },
             {
               "type": "string",
               "pattern": "\\.js$"
@@ -362,15 +365,15 @@
         "decodeInput": {
           "allOf": [
             {
-              "$ref": "#/definitions/endDevicePayloadCodec/definitions/scriptInput"
+              "$ref": "#/$defs/endDevicePayloadCodec/definitions/scriptInput"
             },
             {
               "type": "object",
               "properties": {
-                "bytes": { "$ref": "#/definitions/frmPayload" },
+                "bytes": { "$ref": "#/$defs/frmPayload" },
                 "fPort": {
                   "allOf": [
-                    { "$ref": "#/definitions/fPort" },
+                    { "$ref": "#/$defs/fPort" },
                     {
                       "type": "integer",
                       "minimum": 1
@@ -385,7 +388,7 @@
         "decodeOutput": {
           "allOf": [
             {
-              "$ref": "#/definitions/endDevicePayloadCodec/definitions/scriptOutput"
+              "$ref": "#/$defs/endDevicePayloadCodec/definitions/scriptOutput"
             },
             {
               "type": "object",
@@ -415,7 +418,7 @@
         "encodeInput": {
           "allOf": [
             {
-              "$ref": "#/definitions/endDevicePayloadCodec/definitions/scriptInput"
+              "$ref": "#/$defs/endDevicePayloadCodec/definitions/scriptInput"
             },
             {
               "type": "object",
@@ -431,15 +434,15 @@
         "encodeOutput": {
           "allOf": [
             {
-              "$ref": "#/definitions/endDevicePayloadCodec/definitions/scriptOutput"
+              "$ref": "#/$defs/endDevicePayloadCodec/definitions/scriptOutput"
             },
             {
               "type": "object",
               "properties": {
-                "bytes": { "$ref": "#/definitions/frmPayload" },
+                "bytes": { "$ref": "#/$defs/frmPayload" },
                 "fPort": {
                   "allOf": [
-                    { "$ref": "#/definitions/fPort" },
+                    { "$ref": "#/$defs/fPort" },
                     {
                       "type": "integer",
                       "minimum": 1
@@ -477,12 +480,12 @@
         "normalizeUplinkOutput": {
           "allOf": [
             {
-              "$ref": "#/definitions/endDevicePayloadCodec/definitions/scriptOutput"
+              "$ref": "#/$defs/endDevicePayloadCodec/definitions/scriptOutput"
             },
             {
               "type": "object",
               "properties": {
-                "data": { "$ref": "https://schema.thethings.network/devicerepository/1/payload/schema#/definitions/uplinkPayload" }
+                "data": { "$ref": "https://schema.thethings.network/devicerepository/1/payload/schema#/$defs/uplinkPayload" }
               }
             },
             {
@@ -506,7 +509,7 @@
       "properties": {
         "uplinkDecoder": {
           "allOf": [
-            { "$ref": "#/definitions/script" },
+            { "$ref": "#/$defs/script" },
             {
               "type": "object",
               "properties": {
@@ -516,13 +519,13 @@
                     "type": "object",
                     "properties": {
                       "input": {
-                        "$ref": "#/definitions/endDevicePayloadCodec/definitions/decodeInput"
+                        "$ref": "#/$defs/endDevicePayloadCodec/definitions/decodeInput"
                       },
                       "output": {
-                        "$ref": "#/definitions/endDevicePayloadCodec/definitions/decodeOutput"
+                        "$ref": "#/$defs/endDevicePayloadCodec/definitions/decodeOutput"
                       },
                       "normalizedOutput": {
-                        "$ref": "#/definitions/endDevicePayloadCodec/definitions/normalizeUplinkOutput"
+                        "$ref": "#/$defs/endDevicePayloadCodec/definitions/normalizeUplinkOutput"
                       }
                     }
                   }
@@ -533,7 +536,7 @@
         },
         "downlinkEncoder": {
           "allOf": [
-            { "$ref": "#/definitions/script" },
+            { "$ref": "#/$defs/script" },
             {
               "type": "object",
               "properties": {
@@ -543,10 +546,10 @@
                     "type": "object",
                     "properties": {
                       "input": {
-                        "$ref": "#/definitions/endDevicePayloadCodec/definitions/encodeInput"
+                        "$ref": "#/$defs/endDevicePayloadCodec/definitions/encodeInput"
                       },
                       "output": {
-                        "$ref": "#/definitions/endDevicePayloadCodec/definitions/encodeOutput"
+                        "$ref": "#/$defs/endDevicePayloadCodec/definitions/encodeOutput"
                       }
                     }
                   }
@@ -557,7 +560,7 @@
         },
         "downlinkDecoder": {
           "allOf": [
-            { "$ref": "#/definitions/script" },
+            { "$ref": "#/$defs/script" },
             {
               "type": "object",
               "properties": {
@@ -567,10 +570,10 @@
                     "type": "object",
                     "properties": {
                       "input": {
-                        "$ref": "#/definitions/endDevicePayloadCodec/definitions/decodeInput"
+                        "$ref": "#/$defs/endDevicePayloadCodec/definitions/decodeInput"
                       },
                       "output": {
-                        "$ref": "#/definitions/endDevicePayloadCodec/definitions/decodeOutput"
+                        "$ref": "#/$defs/endDevicePayloadCodec/definitions/decodeOutput"
                       }
                     }
                   }
@@ -622,13 +625,13 @@
           "description": "Maximum delay for the end device to answer a MAC request or confirmed downlink frame (seconds)"
         },
         "pingSlotPeriod": {
-          "$ref": "#/definitions/pingSlotPeriod"
+          "$ref": "#/$defs/pingSlotPeriod"
         },
         "pingSlotDataRateIndex": {
-          "$ref": "#/definitions/dataRateIndex"
+          "$ref": "#/$defs/dataRateIndex"
         },
         "pingSlotFrequency": {
-          "$ref": "#/definitions/frequency"
+          "$ref": "#/$defs/frequency"
         },
         "supportsClassC": {
           "type": "boolean",
@@ -644,32 +647,32 @@
           "description": "LoRaWAN version"
         },
         "regionalParametersVersion": {
-          "$ref": "#/definitions/regionalParametersVersion"
+          "$ref": "#/$defs/regionalParametersVersion"
         },
         "supportsJoin": {
           "type": "boolean",
           "description": "End device supports join (OTAA) or not (ABP)"
         },
         "rx1Delay": {
-          "$ref": "#/definitions/rxDelay",
+          "$ref": "#/$defs/rxDelay",
           "description": "RX1 delay"
         },
         "rx1DataRateOffset": {
-          "$ref": "#/definitions/rxDataRateOffset",
+          "$ref": "#/$defs/rxDataRateOffset",
           "description": "RX1 data rate offset"
         },
         "rx2DataRateIndex": {
-          "$ref": "#/definitions/dataRateIndex",
+          "$ref": "#/$defs/dataRateIndex",
           "description": "RX2 data rate index"
         },
         "rx2Frequency": {
-          "$ref": "#/definitions/frequency",
+          "$ref": "#/$defs/frequency",
           "description": "RX2 channel frequency"
         },
         "factoryPresetFrequencies": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/frequency"
+            "$ref": "#/$defs/frequency"
           },
           "uniqueItems": true,
           "description": "List of factory preset frequencies"
@@ -912,16 +915,16 @@
               },
               "profiles": {
                 "type": "object",
-                "propertyNames": { "$ref": "#/definitions/region" },
+                "propertyNames": { "$ref": "#/$defs/region" },
                 "patternProperties": {
                   "": {
                     "type": "object",
                     "properties": {
-                      "id": { "$ref": "#/definitions/identifier" },
+                      "id": { "$ref": "#/$defs/identifier" },
                       "lorawanCertified": {
                         "type": "boolean"
                       },
-                      "codec": { "$ref": "#/definitions/identifier" }
+                      "codec": { "$ref": "#/$defs/identifier" }
                     },
                     "required": ["id"]
                   }
@@ -931,7 +934,8 @@
                 "type": "array",
                 "items": {
                   "type": "string"
-                }
+                },
+                "uniqueItems": true
               },
               "features": {
                 "type": "array",
@@ -1017,6 +1021,7 @@
               "rssi",
               "sap flow",
               "salinity",
+              "size",
               "smart valve",
               "smoke",
               "snr",
@@ -1044,13 +1049,15 @@
               "wind direction",
               "wind speed"
             ]
-          }
+          },
+          "uniqueItems": true
         },
         "additionalRadios": {
           "type": "array",
           "items": {
             "enum": ["ble", "nfc", "wifi", "cellular"]
-          }
+          },
+          "uniqueItems": true
         },
         "bridgeInterfaces": {
           "type": "array",
@@ -1212,9 +1219,11 @@
                     "South Korea",
                     "Turkey",
                     "United States",
+                    "United Kingdom",
                     "Other"
                   ]
-                }
+                },
+                "uniqueItems": true
               },
               "url": {
                 "type": "string",
@@ -1240,10 +1249,10 @@
         "photos": {
           "type": "object",
           "properties": {
-            "main": { "$ref": "#/definitions/photo" },
+            "main": { "$ref": "#/$defs/photo" },
             "other": {
               "type": "array",
-              "items": { "$ref": "#/definitions/photo" }
+              "items": { "$ref": "#/$defs/photo" }
             }
           },
           "required": ["main"]
@@ -1251,23 +1260,23 @@
         "videos": {
           "type": "object",
           "properties": {
-            "main": { "$ref": "#/definitions/video" },
+            "main": { "$ref": "#/$defs/video" },
             "other": {
               "type": "array",
-              "items": { "$ref": "#/definitions/video" }
+              "items": { "$ref": "#/$defs/video" }
             }
           }
         },
         "compliances": {
           "type": "object",
           "properties": {
-            "safety": { "$ref": "#/definitions/compliances" },
-            "radioEquipment": { "$ref": "#/definitions/compliances" }
+            "safety": { "$ref": "#/$defs/compliances" },
+            "radioEquipment": { "$ref": "#/$defs/compliances" }
           }
         }
       },
       "required": ["name", "firmwareVersions"]
     }
   },
-  "oneOf": [{ "$ref": "#/definitions/endDevice" }, { "$ref": "#/definitions/endDeviceProfile" }, { "$ref": "#/definitions/vendorsIndex" }, { "$ref": "#/definitions/vendorIndex" }]
+  "oneOf": [{ "$ref": "#/$defs/endDevice" }, { "$ref": "#/$defs/endDeviceProfile" }, { "$ref": "#/$defs/vendorsIndex" }, { "$ref": "#/$defs/vendorIndex" }]
 }

@@ -1,0 +1,113 @@
+name: LoRaWAN® Radiator Thermostat Controllable
+description: 'The dnt® LoRaWAN® Radiator thermostat Controllable (dnt-lw-eTRV-C) enables two ways to adjust the room temperature: directly on the device with the integrated buttons or remote control via Downlinks. It features an always-on e-paper display to show the current temperature settings, three customizable heating profiles with up to ten switching times per day, a window open detection to automatically reduce temperature and the possibility to perform a dynamic adaptive adjustment of the radiator. Because of very low energy consumption, a battery life up to 3 years can be archived.'
+
+# Hardware versions (optional, use when you have revisions)
+hardwareVersions:
+  - version: '1.0'
+    numeric: 1
+
+# Firmware versions (at least one is mandatory)
+firmwareVersions:
+  - # Firmware version
+    version: '0.1.0'
+    numeric: 1
+    hardwareVersions:
+      - '1.0'
+    profiles:
+      EU863-870:
+        id: dnt-profile
+        codec: dnt-lw-etrv-c-codec
+    # Corresponding hardware versions (optional)
+  - version: '1.3.0'
+    numeric: 130
+    hardwareVersions:
+      - '1.0'
+    profiles:
+      EU863-870:
+        id: dnt-profile
+        lorawanCertified: true
+        codec: dnt-lw-etrv-c-codec
+  - version: '1.4.4'
+    numeric: 144
+    hardwareVersions:
+      - '1.0'
+    profiles:
+      EU863-870:
+        id: dnt-profile-1-0-4
+        lorawanCertified: true
+        codec: dnt-lw-etrv-c-codec-1-5-2
+
+    # Firmware features (optional)
+    # Valid values are: remote rejoin (trigger a join from the application layer), transmission interval (configure how
+    # often he device sends a message).
+    features:
+      - transmission interval
+
+# Sensors that this device features (optional)
+# Valid values are:
+# 4-20 ma, accelerometer, altitude, analog input, auxiliary, barometer, battery, button, bvoc, co, co2, conductivity,
+# current, digital input, dissolved oxygen, distance, dust, energy, gps, gyroscope, h2s, humidity, iaq, level, light,
+# lightning, link, magnetometer, moisture, motion, no, no2, o3, particulate matter, ph, pir, pm2.5, pm10, potentiometer,
+# power, precipitation, pressure, proximity, pulse count, pulse frequency, radar, rainfall, rssi, smart valve, snr, so2,
+# solar radiation, sound, strain, surface temperature, temperature, tilt, time, tvoc, uv, vapor pressure, velocity,
+# vibration, voltage, water potential, water, weight, wifi ssid, wind direction, wind speed.
+sensors:
+  - temperature
+
+# Dimensions in mm (optional)
+# Use width, height, length and/or diameter
+dimensions:
+  width: 53
+  length: 94
+  height: 53
+
+# Weight in grams (optional)
+weight: 179
+
+# Operating conditions (optional)
+operatingConditions:
+  # Temperature (Celsius)
+  temperature:
+    min: 0
+    max: 50
+  # Relative humidity (fraction of 1)
+  relativeHumidity:
+    min: 0
+    max: 0.97
+
+# IP rating (optional)
+ipCode: IP20
+
+# Key provisioning (optional)
+# Valid values are: custom (user can configure keys), join server and manifest.
+keyProvisioning:
+  - join server
+
+# Key programming (optional)
+# Valid values are: bluetooth, nfc, wifi, serial (when the user has a serial interface to set the keys)
+# and firmware (when the user should change the firmware to set the keys).
+keyProgramming:
+  - firmware
+
+# Firmware programming (optional)
+# Valid values are: serial (when the user has a serial interface to update the firmware), fuota lorawan (when the device
+# supports LoRaWAN FUOTA via standard interfaces) and fuota other (other wireless update mechanism).
+firmwareProgramming:
+  - serial
+  - fuota lorawan
+
+# Product and data sheet URLs (optional)
+productURL: https://dnt.de/business/
+
+# Commercial information
+resellerURLs:
+  - name: 'dnt'
+    region:
+      - European Union
+    url: https://dnt.de/produkte/dnt-lorawan-heizkoerperthermostat-bedienbar-dnt-lw-etrv-c/
+msrp:
+  EUR: 89.95
+
+# Photos
+photos:
+  main: dnt-lw-etrv-c.png
